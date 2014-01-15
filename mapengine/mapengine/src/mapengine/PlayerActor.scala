@@ -16,11 +16,15 @@ class PlayerActor extends Actor with ActorLogging {
   def receive = {
     case msg: AddRoutee => outgoingEventRouter ! msg;
     case msg: RemoveRoutee => outgoingEventRouter ! msg;
-    case Greeting(who) => log.info("Saw " + who)
+    case Event(msg, player) => msg match {
+      case Greeting(who) => log.info("Saw " + who)
+    }
     case Name(what) => log.info("Sending Event for "+what)
     			outgoingEventRouter ! Greeting(what)
     case Degraded(msg, _) => msg match {
-      case Greeting(who) => log.info("Saw Degraded " + who)    
+        case Event(msg, player) => msg match {
+          case Greeting(who) => log.info("Saw Degraded " + who)    
+        }
     }
   }
 }

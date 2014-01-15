@@ -39,6 +39,7 @@ class MapCell extends Actor with ActorLogging {
   }
 }
 
+case class Event(msg: Any, player: ActorRef)
 case class Degraded(msg: Any, origSender: ActorRef)
 case class EnterCell(who: ActorRef)
 case class LeaveCell(who: ActorRef)
@@ -49,7 +50,7 @@ class NoOp extends Actor {def receive = {case _ => ;}}
 
 class Retransmit(router: ActorRef, cell: ActorRef) extends Actor {
   def receive = {
-    case msg => router.tell(msg, cell)
+    case msg => router.tell(Event(msg, sender), cell)
   }
 }
   

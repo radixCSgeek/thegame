@@ -59,7 +59,7 @@ greeter2 ! Name("Test2")
 
 println("Done")
 
-var map = Array.ofDim[ActorRef](12, 12) //leave a null border
+val map = Array.ofDim[ActorRef](12, 12) //leave a null border
 for(x <- 1 to 10){
   for(y <- 1 to 10){
     if(((y==1 || y==10) && (x>3 && x<8)) || ((x==1 || x==10) && (y>3 && y<8))){

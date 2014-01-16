@@ -17,11 +17,13 @@ class MapCell extends Actor with ActorLogging {
   def enter(who: ActorRef) = {
     incomingRouter ! AddRoutee(ActorRefRoutee(who))
     who ! AddRoutee(ActorRefRoutee(eventHandler))
+    who ! AddRoutee(ActorRefRoutee(incomingRouter))
   }
   
   def leave(who: ActorRef) = {
     incomingRouter ! RemoveRoutee(ActorRefRoutee(who))
     who ! RemoveRoutee(ActorRefRoutee(eventHandler))
+    who ! RemoveRoutee(ActorRefRoutee(incomingRouter))
   }
   
   def linkNeighbor(neighbor: ActorRef) = {
@@ -30,7 +32,7 @@ class MapCell extends Actor with ActorLogging {
   
  def receive = {
     //Filter out "echos"
-    case msg: Degraded => if(msg.origSender.compareTo(self)!=0) incomingRouter ! msg
+    case msg: Degraded => if(msg.origSender != self) incomingRouter ! msg
     case EnterCell(who) => enter(who)
     case LeaveCell(who) => leave(who)
     case LinkNeighbor(neighbor) => linkNeighbor(neighbor)
